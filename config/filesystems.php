@@ -71,6 +71,18 @@ return [
             'root' => storage_path('video_HLS/output'),
         ],
 
+        'video_hls2_input' =>[
+            'driver' => 'local',
+            'root' => storage_path('video_HLS_2/input'),
+        ],
+
+        'video_hls2_output' =>[
+            'driver' => 'local',
+            'root' => storage_path('video_HLS_2/output'),
+        ],
+
+
+
 
         's3' => [
             'driver' => 's3',

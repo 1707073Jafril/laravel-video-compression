@@ -23,4 +23,7 @@ Route::post('video-upload', [VideoController::class, 'videoCompress']);
 
 Route::post('video-hls', [VideoController::class, 'videoHLS']);
 
-Route::post('video-hls-encryption', [VideoController::class, 'videoHlsEncryption']);
+Route::post('video-hls-2', [VideoController::class, 'videoHLS2']);
+
+Route::post('video-hls-demo', [VideoController::class, 'videoHLS_demo']);
+
