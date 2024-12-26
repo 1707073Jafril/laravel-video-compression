@@ -27,12 +27,13 @@ class VideoController extends Controller
         $file->move($upload_path, $fileName);
         $uploadedFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.mp4';
 
-        $lowBitrateFormat = (new X264('libmp3lame', 'libx264'))->setKiloBitrate(500);
+        $lowBitrateFormat = (new X264('libmp3lame', 'libx264'))->setKiloBitrate(1500);
         FFMpeg::fromDisk('video_compression_input')
-            ->open( $uploadedFileName)
-            ->addFilter(function (VideoFilters $filters) {
-                $filters->resize(new \FFMpeg\Coordinate\Dimension(1280, 720));
-            })
+            //->open( $uploadedFileName)
+            ->open('small.mp4')
+            //->addFilter(function (VideoFilters $filters) {
+            //    $filters->resize(new \FFMpeg\Coordinate\Dimension(1280, 720));
+           // })
             ->export()
             ->toDisk('video_compression_output')
             ->inFormat($lowBitrateFormat)
@@ -61,6 +62,7 @@ class VideoController extends Controller
         $upload_path = '/Users/zbg/my-laravel-app/storage/video_HLS/input';
         $file->move($upload_path, $fileName);
         $uploadedFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.mp4';
+        $outputFolderName = pathinfo($fileName, PATHINFO_FILENAME);
 
         $lowBitrate = (new X264)->setKiloBitrate(250);
         $midBitrate = (new X264)->setKiloBitrate(500);
@@ -75,7 +77,8 @@ class VideoController extends Controller
             ->addFormat($midBitrate)
             ->addFormat($highBitrate)
             ->toDisk('video_hls_output')
-            ->save(pathinfo($uploadedFileName, PATHINFO_FILENAME) . '.m3u8');
+            //->save(pathinfo($uploadedFileName, PATHINFO_FILENAME) . '.m3u8');
+            ->save("{$outputFolderName}/index.m3u8");
 
         return response()->json([
             'message' => 'Video processed and saved successfully.',
@@ -99,6 +102,7 @@ class VideoController extends Controller
         $upload_path = '/Users/zbg/my-laravel-app/storage/video_HLS_2/input';
         $file->move($upload_path, $fileName);
         $uploadedFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.mp4';
+        $outputFolderName = pathinfo($fileName, PATHINFO_FILENAME);
 
         $lowBitrate = (new X264)->setKiloBitrate(250);
         $midBitrate = (new X264)->setKiloBitrate(500);
@@ -125,7 +129,8 @@ class VideoController extends Controller
                 });
             })
             ->toDisk('video_hls2_output')
-            ->save(pathinfo($uploadedFileName, PATHINFO_FILENAME) . '.m3u8');
+            //->save(pathinfo($uploadedFileName, PATHINFO_FILENAME) . '.m3u8');
+            ->save("{$outputFolderName}/index.m3u8");
 
         return response()->json([
             'message' => 'Video processed and saved successfully.',
@@ -142,6 +147,7 @@ class VideoController extends Controller
         $fileName = time() . '.' . $file->extension();
         $file->move($upload_path, $fileName);
         $uploadedFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.mp4';
+        $outputFolderName = pathinfo($fileName, PATHINFO_FILENAME);
 
         $lowBitrate = (new X264)->setKiloBitrate(250);
         $midBitrate = (new X264)->setKiloBitrate(500);
@@ -155,8 +161,9 @@ class VideoController extends Controller
             ->addFormat($lowBitrate)
             ->addFormat($midBitrate)
             ->addFormat($highBitrate)
-            ->toDisk('video_hls2_output')
-            ->save(pathinfo($uploadedFileName, PATHINFO_FILENAME) . '.m3u8');
+            ->toDisk('video_hls_output')
+            ->save("{$outputFolderName}/index.m3u8");
+            //->save(pathinfo($uploadedFileName, PATHINFO_FILENAME) . '.m3u8');
 
         return response()->json([
             'message' => 'Video processed and saved successfully.',
@@ -164,7 +171,6 @@ class VideoController extends Controller
         ]);
 
     }
-
 
 
 
