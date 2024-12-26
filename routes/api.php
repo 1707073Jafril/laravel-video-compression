@@ -20,3 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('video-upload', [VideoController::class, 'videoCompress']);
+
+Route::post('video-hls', [VideoController::class, 'videoHLS']);
+
+Route::post('video-hls-encryption', [VideoController::class, 'videoHlsEncryption']);

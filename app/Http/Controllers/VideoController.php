@@ -18,9 +18,6 @@ class VideoController extends Controller
         $request->validate([
             'File' => 'required|file|mimes:mp4,mov,avi|max:20480', // Example validation rules
         ]);
- 
-        
-    
         // Check if the file exists
         if (!$request->hasFile('File')) {
             return response()->json(['error' => 'No file uploaded'], 400);
@@ -38,7 +35,7 @@ class VideoController extends Controller
             ->inFormat($lowBitrateFormat)
 
             //->inFormat(new \FFMpeg\Format\Video\X264)
-            ->save('small_out.mp4');
+            ->save('processedVideos/small_out.mp4');
 
         return response()->json([
             'message' => 'Video processed and saved successfully.',
@@ -47,4 +44,38 @@ class VideoController extends Controller
 
         
     }
+
+    public function videoHLS(Request $request): JsonResponse
+    {
+        $file = $request->file('File');
+        $lowBitrate = (new X264)->setKiloBitrate(250);
+        $midBitrate = (new X264)->setKiloBitrate(500);
+        $highBitrate = (new X264)->setKiloBitrate(1000);
+
+        FFMpeg::fromDisk('public')
+            ->open('small.mp4')
+            ->exportForHLS()
+            ->setSegmentLength(10) // optional
+            ->setKeyFrameInterval(48) // optional
+            ->addFormat($lowBitrate)
+            ->addFormat($midBitrate)
+            ->addFormat($highBitrate)
+            ->save('adaptive_steve.m3u8');
+
+        return response()->json([
+            'message' => 'Video processed and saved successfully.',
+            //'path' => asset('storage/' . $docPath),
+        ]);
+    
+    }
+
+    public function videoHlsEncryption(Request $request): JsonResponse
+    {
+        $file = $request->file('File');
+        
+    }
+
+
+
+
 }
