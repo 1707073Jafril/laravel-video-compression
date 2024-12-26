@@ -61,6 +61,17 @@ return [
             'root' => storage_path('video_compression/output'),
         ],
 
+        'video_hls_input' =>[
+            'driver' => 'local',
+            'root' => storage_path('video_HLS/input'),
+        ],
+
+        'video_hls_output' =>[
+            'driver' => 'local',
+            'root' => storage_path('video_HLS/output'),
+        ],
+
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

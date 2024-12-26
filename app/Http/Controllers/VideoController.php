@@ -50,15 +50,16 @@ class VideoController extends Controller
         $midBitrate = (new X264)->setKiloBitrate(500);
         $highBitrate = (new X264)->setKiloBitrate(1000);
 
-        FFMpeg::fromDisk('public/processedVideos')
-            ->open('small_out.mp4')
+        FFMpeg::fromDisk('video_hls_input')
+            ->open('small.mp4')
             ->exportForHLS()
             ->setSegmentLength(10) 
             ->setKeyFrameInterval(48) 
             ->addFormat($lowBitrate)
             ->addFormat($midBitrate)
             ->addFormat($highBitrate)
-            ->save('adaptive_steve.m3u8');
+            ->toDisk('video_hls_output')
+            ->save('small_out.m3u8');
 
         return response()->json([
             'message' => 'Video processed and saved successfully.',
