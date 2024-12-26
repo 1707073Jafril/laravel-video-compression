@@ -25,17 +25,15 @@ class VideoController extends Controller
 
         $file = $request->file('File');
         $lowBitrateFormat = (new X264('libmp3lame', 'libx264'))->setKiloBitrate(500);
-        FFMpeg::fromDisk('public')
+        FFMpeg::fromDisk('video_compression_input')
             ->open('small.mp4')
             ->addFilter(function (VideoFilters $filters) {
                 $filters->resize(new \FFMpeg\Coordinate\Dimension(1280, 720));
             })
             ->export()
-            ->toDisk('public')
+            ->toDisk('video_compression_output')
             ->inFormat($lowBitrateFormat)
-
-            //->inFormat(new \FFMpeg\Format\Video\X264)
-            ->save('processedVideos/small_out.mp4');
+            ->save('small_out_n.mp4');  
 
         return response()->json([
             'message' => 'Video processed and saved successfully.',
@@ -52,11 +50,11 @@ class VideoController extends Controller
         $midBitrate = (new X264)->setKiloBitrate(500);
         $highBitrate = (new X264)->setKiloBitrate(1000);
 
-        FFMpeg::fromDisk('public')
-            ->open('small.mp4')
+        FFMpeg::fromDisk('public/processedVideos')
+            ->open('small_out.mp4')
             ->exportForHLS()
-            ->setSegmentLength(10) // optional
-            ->setKeyFrameInterval(48) // optional
+            ->setSegmentLength(10) 
+            ->setKeyFrameInterval(48) 
             ->addFormat($lowBitrate)
             ->addFormat($midBitrate)
             ->addFormat($highBitrate)
@@ -72,7 +70,8 @@ class VideoController extends Controller
     public function videoHlsEncryption(Request $request): JsonResponse
     {
         $file = $request->file('File');
-        
+
+
     }
 
 

@@ -49,6 +49,18 @@ return [
             'root' => storage_path('app/videos'),
         ],
 
+        'video_compression_input' =>[
+
+            'driver' => 'local',
+            'root' => storage_path('video_compression/input'),
+        ],
+
+        'video_compression_output' =>[
+
+            'driver' => 'local',
+            'root' => storage_path('video_compression/output'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
